@@ -62,9 +62,16 @@ function bd {
         return
     fi
 
+    local DIR
     if [ -n "$1" ]; then
-        cd "$base_dir/$1"
+        DIR="$base_dir/$1"
     else
-        cd "$git_dir/.."
+        DIR="$git_dir/.."
+    fi
+
+    if [ -d "$DIR" ]; then
+        cd "$DIR"
+    else
+        echo "ERROR: branchdir does not exist: $DIR"
     fi
 }
