@@ -3,161 +3,259 @@
 set -o errexit
 set -o pipefail
 
-prompt_delete() {
+
+function __bd_prompt {
+    local msg="$1"
+    local regex="$2"
+
+    if [ -n "$regex" ]; then
+        msg="$msg $regex"
+    fi
+
+    local prompt_done=0
+    local response
+    while [ "$prompt_done" -eq 0 ]; do
+        echo -n "$msg " 1>&2
+        read response
+        if [[ -z "$regex" || "$response" =~ ^$regex$ ]]; then
+            prompt_done=1
+        else
+            echo "warning: invalid response, please try again" 1>&2
+        fi
+    done
+    echo -n "$response"
+}
+
+
+function __bd_prompt_delete {
     local dir="$1"
 
-    echo -n "Are you sure you want to delete '$dir'? (y/n) "
-    read response
+    local response=$(__bd_prompt  "Are you sure you want to delete '$dir'?" "(y|n)")
     if [ "$response" == "y" ]; then
         rm -rf "$dir" || true
+    else
+        if [ "$response" == "n" ]; then
+            exit 0
+        else
+            exit 128
+        fi
     fi
 }
 
-branchdir() {
+
+function __bd_init {
+    local git_dir="$(git config --get bd.git-dir 2> /dev/null || true)"
+    local msg="Enter the master clone:"
+    if [ -n "$git_dir" ]; then
+        msg="$msg [$git_dir]"
+    else
+        # GIT_DIR is set by git-sh-setup
+        git_dir="$(cd -P $GIT_DIR && pwd)"
+        if [ -n "$git_dir" ]; then
+            msg="$msg [$git_dir]"
+        fi
+    fi
+
+    local p_git_dir="$(__bd_prompt "$msg")"
+    if [ -n "$p_git_dir" ]; then
+        git_dir="$p_git_dir"
+    fi
+
+    local base_dir="$(__bd_base_dir)"
+    msg="Enter the base directory for branchdirs:"
+    if [ -n "$base_dir" ]; then
+        msg="$msg [$base_dir]"
+    else
+        base_dir="$( cd -P $GIT_DIR/../.. && pwd)"
+        msg="$msg [$base_dir]"
+    fi
+    local p_base_dir="$(__bd_prompt "$msg")"
+    if [ -n "$p_base_dir" ]; then
+        base_dir="$p_base_dir"
+    fi
+
+    # TODO verify it's a valid directory
+
+    git config --replace-all bd.git-dir "$git_dir"
+    git config --replace-all bd.base-dir "$base_dir"
+}
+
+
+function __bd_base_dir {
+    git config --get bd.base-dir 2> /dev/null || true
+}
+
+
+function __bd_validate_init {
+    local base_dir="$(__bd_base_dir)"
+    if [ -z "$base_dir" ]; then
+        say 'ERROR: `git-bd` is not properly configured.'
+        say ''
+        say 'Have you `git bd --init` yet?'
+        exit 128
+    fi
+    if ! [ -d "$base_dir" ]; then
+        say 'ERROR: `git-bd` base directory does not exist:' $base_dir
+        exit 128
+    fi
+}
+
+
+function __bd_delete {
+    local name="$1"
+    if [ -z "$name" ]; then
+        exit 0
+    fi
+
+    local B_OPT
+    if [ -n "$OPT_D" ]; then
+        B_OPT="-D"
+    else
+        B_OPT="-d"
+    fi
+
+    work_tree="$(git config --get bd.$name.work-tree)"
+    if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
+        die_with_status 128 "ERROR: Cannot delete the branchdir '$name' which you are currently in."
+    fi
+    __bd_prompt_delete "$work_tree"
+    if [ -d "$work_tree" ]; then
+        die_with_status 128 "fatal: failed to remove work tree: '$work_tree'"
+    fi
+    git branch $B_OPT "$name"
+    git config --remove-section bd.$name
+}
+
+
+function __bd_move {
+    local name="$1"
+    local new_name="$2"
+    if [ -z "$name" ]; then
+        usage
+    fi
+    if [ -z "$new_name" ]; then
+        exit 0
+    fi
+
+    local B_OPT
+    if [ -n "$OPT_M" ]; then
+        B_OPT="-M"
+    else
+        B_OPT="-m"
+    fi
+
+    local base_dir="$(__bd_base_dir)"
+    work_tree="$(git config --get bd.$name.work-tree)"
+    new_work_tree="$base_dir/$new_name"
+    git branch $B_OPT "$name" "$new_name"
+    if [ -e "$new_work_tree" ]; then
+        if [ -n "$OPT_M" ]; then
+            __bd_prompt_delete "$new_work_tree"
+            if [ -d "$new_work_tree" ]; then
+                git branch -m "$new_name" "$name"
+                die_with_status 128 "fatal: failed to remove existing directory: '$new_work_tree'"
+            fi
+        else
+            git branch -m "$new_name" "$name"
+            die_with_status 128 "fatal: A directory named '$new_work_tree' already exists."
+        fi
+    fi
+    mv "$work_tree" "$new_work_tree"
+    git config --remove-section bd.$name
+    git config --add bd.$new_name.work-tree $new_work_tree
+}
+
+
+function __bd_new {
+    local name="$1"
+    local start_point="$2"
+    if [ -n "$name" ]; then
+        local base_dir="$(__bd_base_dir)"
+        work_tree="$base_dir/$name"
+        git branch $name $start_point
+        # GIT_DIR is set by git-sh-setup
+        git-new-workdir $GIT_DIR $work_tree $name 2> /dev/null
+        git config --add bd.$name.work-tree $work_tree
+        echo "'bd $name' to switch to new branchdir."
+    fi
+}
+
+
+function __bd_list {
+    local base_dir="$(__bd_base_dir)"
+    HEAD="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+    git config --get-regexp bd\..*\.work-tree \
+        | sed -e 's/bd\..*\.work-tree/ /' \
+        | sed -e "s|$base_dir/*||" \
+        | sed -e "s|  $HEAD$|* $HEAD|"
+}
+
+
+function __bd {
     # OPTIONS_SPEC is parsed by git-sh-setup
     # GIT_DIR is set by git-sh-setup
     source "$(git --exec-path)/git-sh-setup"
-
-    local git_dir="$(git config --get branchdir.git-dir 2> /dev/null || true)"
-    if [ -z "$git_dir" ]; then
-        git config --add branchdir.git-dir "$(cd -P $GIT_DIR && pwd)"
-    else
-        GIT_DIR="$git_dir"
-    fi
-    local branchdir_base="$(git config --get branchdir.base 2> /dev/null || true)"
-    if [ -z "$branchdir_base" ]; then
-        say "error: branchdir base not set"
-        say ""
-        say "Have you configured 'branchdir' yet? See 'git branchdir --help'."
-        exit 128
-    fi
-    if ! [ -d "$branchdir_base" ]; then
-        mkdir "$branchdir_base"
-    fi
 
     while [ $# -gt 0 ]; do
         OPT="$1"
         shift
         case $OPT in
-            --)
-                break
-                ;;
-            -m)
-                OPT_m=1
-                ;;
-            -M)
-                OPT_M=1
-                ;;
-            -d)
-                OPT_d=1
-                ;;
-            -D)
-                OPT_D=1
-                ;;
+            --) break ;;
+            -m) OPT_m=1 ;;
+            -M) OPT_M=1 ;;
+            -d) OPT_d=1 ;;
+            -D) OPT_D=1 ;;
+            --init) OPT_init=1 ;;
         esac
     done
+
+    if [ -n "$OPT_init" ]; then
+        __bd_init
+        exit 0
+    else
+        __bd_validate_init
+    fi
 
     # validate name?
 
     local work_tree
 
     if [[ (-n "$OPT_d" || -n "$OPT_D") && (-n "$OPT_m" || -n "$OPT_M") ]]; then
-        usage;
+        usage
+        exit 128
     fi
     if [[ -n "$OPT_D" || -n "$OPT_d" ]]; then
-        local name="$1"
-
-        if [ -z "$name" ]; then
-            exit 0
-        fi
-
-        local B_OPT
-        if [ -n "$OPT_D" ]; then
-            B_OPT="-D"
-        else
-            B_OPT="-d"
-        fi
-
-        work_tree="$(git config --get branchdir.$name.work-tree)"
-        if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
-            die_with_status 128 "error: Cannot delete the branchdir '$name' which you are currently in."
-        fi
-        prompt_delete "$work_tree"
-        if [ -d "$work_tree" ]; then
-            die_with_status 128 "fatal: failed to remove work tree: '$work_tree'"
-        fi
-        git branch $B_OPT "$name"
-        git config --remove-section branchdir.$name
+        __bd_delete "$@"
         exit 0
     fi
     if [[ -n "$OPT_M" || -n "$OPT_m" ]]; then
-        local name="$1"
-        local new_name="$2"
-
-        if [ -z "$name" ]; then
-            usage
-        fi
-        if [ -z "$new_name" ]; then
-            exit 0
-        fi
-
-        local B_OPT
-        if [ -n "$OPT_M" ]; then
-            B_OPT="-M"
-        else
-            B_OPT="-m"
-        fi
-
-        work_tree="$(git config --get branchdir.$name.work-tree)"
-        new_work_tree="$branchdir_base/$new_name"
-        git branch $B_OPT "$name" "$new_name"
-        if [ -e "$new_work_tree" ]; then
-            if [ -n "$OPT_M" ]; then
-                prompt_delete "$new_work_tree"
-                if [ -d "$new_work_tree" ]; then
-                    git branch -m "$new_name" "$name"
-                    die_with_status 128 "fatal: failed to remove existing directory: '$new_work_tree'"
-                fi
-            else
-                git branch -m "$new_name" "$name"
-                die_with_status 128 "fatal: A directory named '$new_work_tree' already exists."
-            fi
-        fi
-        mv "$work_tree" "$new_work_tree"
-        git config --remove-section branchdir.$name
-        git config --add branchdir.$new_name.work-tree $new_work_tree
+        __bd_move "$@"
         exit 0
     fi
 
     if [ $# -gt 0 ]; then
-        local name="$1"
-        local start_point="$2"
-
-        if [ -n "$name" ]; then
-            work_tree="$branchdir_base/$name"
-            git branch $name $start_point
-            git-new-workdir $GIT_DIR $work_tree $name
-            git config --add branchdir.$name.work-tree $work_tree
-        fi
+        __bd_new "$@"
+        exit 0
     else
-        HEAD="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
-        git config --get-regexp branchdir\..*\.work-tree \
-            | sed -e 's/branchdir\..*\.work-tree/ /' \
-            | sed -e "s|$branchdir_base/*||" \
-            | sed -e "s|  $HEAD$|* $HEAD|"
+        __bd_list
+        exit 0
     fi
 }
 
+
 SUBDIRECTORY_OK=1
 OPTIONS_SPEC="\
-git branchdir <branchdir-name> [<start-point>]
-git branchdir (-m | -M) <oldbranchdir> <newbranchdir>
-git branchdir (-d | -D) <branchdir-name>
+git bd <branchdir> [<start-point>]
+git bd (-m | -M) <oldbranchdir> <newbranchdir>
+git bd (-d | -D) <branchdir>
 --
 h,help  show the help
+init    Initialize 'git-bd'.
 m       Move/rename a branchdir.
 M       Move/rename a branchdir even if the new branchdir already exists.
 d       Delete a branchdir.
 D       Delete a branchdir irrespective of its merged status.
 "
-branchdir $@
+
+
+__bd $@
