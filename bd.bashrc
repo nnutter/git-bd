@@ -47,6 +47,16 @@ complete -F __complete_bd bd
 function bd {
     local base_dir="$(git config --get bd.base-dir 2> /dev/null || true)"
     local git_dir="$(git config --get bd.git-dir 2> /dev/null || true)"
+
+    if [ "$1" == "-h" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ]; then
+        echo 'Usage:'
+        echo '   bd                 changes to primary working directory'
+        echo '   bd <branchdir>     changes to specified branchdir'
+        echo ''
+        echo 'Must be used within an existing branchdir or the primary working directory.  <branchdir> can be tab completed.'
+        return
+    fi
+
     if [ -n "$1" ]; then
         cd "$base_dir/$1"
     else
