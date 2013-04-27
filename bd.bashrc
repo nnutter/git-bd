@@ -57,6 +57,11 @@ function bd {
         return
     fi
 
+    if [ -z "$base_dir" ]; then
+        echo 'ERROR: Have you `git bd --init` yet?'
+        return
+    fi
+
     if [ -n "$1" ]; then
         cd "$base_dir/$1"
     else
