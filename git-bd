@@ -175,11 +175,11 @@ function __bd_new {
     local name="$1"
     local start_point="$2"
     if [ -n "$name" ]; then
+        local git_dir="$(__bd_git_dir)"
         local base_dir="$(__bd_base_dir)"
         work_tree="$base_dir/$name"
         git branch $name $start_point
-        # GIT_DIR is set by git-sh-setup
-        git-new-workdir $GIT_DIR $work_tree $name 2> /dev/null
+        git-new-workdir $git_dir $work_tree $name 2> /dev/null
         git config --add bd.$name.work-tree $work_tree
         echo "'bd $name' to switch to new branchdir."
     fi
