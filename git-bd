@@ -129,6 +129,12 @@ function __bd_delete {
         say 'Do you just need to delete the branch?'
         exit 128
     fi
+    if [ ! -d "$work_tree" ]; then
+        say "git-bd: workdir not found: $work_tree"
+        say ''
+        say 'Do you just need to delete the branch?'
+        exit 128
+    fi
     if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
         die_with_status 128 "git-bd: cannot delete the branchdir you are currently in"
     fi
