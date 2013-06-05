@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# From git/contrib:
+# https://raw.github.com/git/git/master/contrib/workdir/git-new-workdir
+
 usage () {
 	echo "usage:" $@
 	exit 127
