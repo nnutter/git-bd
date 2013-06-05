@@ -103,6 +103,11 @@ function __bd_validate_init {
         say 'ERROR: `git-bd` base directory does not exist:' $base_dir
         exit 128
     fi
+
+    if ! which git-new-workdir > /dev/null; then
+        say 'ERROR: git-new-workdir: command not found'
+        exit 128
+    fi
 }
 
 
