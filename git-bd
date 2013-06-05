@@ -132,7 +132,7 @@ function __bd_delete {
         exit 128
     fi
     if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
-        die_with_status 128 "git-bd: cannot delete the branchdir '$name' which you are currently in."
+        die_with_status 128 "git-bd: cannot delete the branchdir you are currently in"
     fi
     __bd_prompt_delete "$work_tree"
     if [ -d "$work_tree" ]; then
