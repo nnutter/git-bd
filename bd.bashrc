@@ -47,6 +47,7 @@ complete -F __complete_bd bd
 function bd {
     local base_dir="$(git config --get bd.base-dir 2> /dev/null || true)"
     local git_dir="$(git config --get bd.git-dir 2> /dev/null || true)"
+    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
     if [ "$1" == "-h" ] || [ "$1" == "-?" ] || [ "$1" == "--help" ]; then
         echo 'Usage:'
@@ -67,6 +68,10 @@ function bd {
         DIR="$base_dir/$1"
     else
         DIR="$git_dir/.."
+    fi
+
+    if [ -n "$branch" ] && [ -d "$DIR/${PWD/$base_dir\/$branch\//}" ]; then
+        DIR="$DIR/${PWD/$base_dir\/$branch\//}"
     fi
 
     if [ -d "$DIR" ]; then
