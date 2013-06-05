@@ -94,18 +94,18 @@ function __bd_base_dir {
 function __bd_validate_init {
     local base_dir="$(__bd_base_dir)"
     if [ -z "$base_dir" ]; then
-        say 'ERROR: `git-bd` is not properly configured.'
+        say 'git-bd: is not properly configured.'
         say ''
         say 'Have you `git bd --init` yet?'
         exit 128
     fi
     if ! [ -d "$base_dir" ]; then
-        say 'ERROR: `git-bd` base directory does not exist:' $base_dir
+        say 'git-bd: base directory does not exist:' $base_dir
         exit 128
     fi
 
     if ! which git-new-workdir > /dev/null; then
-        say 'ERROR: git-new-workdir: command not found'
+        say 'git-bd: git-new-workdir: command not found'
         exit 128
     fi
 }
@@ -126,11 +126,11 @@ function __bd_delete {
 
     work_tree="$(git config --get bd.$name.work-tree)"
     if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
-        die_with_status 128 "ERROR: Cannot delete the branchdir '$name' which you are currently in."
+        die_with_status 128 "git-bd: cannot delete the branchdir '$name' which you are currently in."
     fi
     __bd_prompt_delete "$work_tree"
     if [ -d "$work_tree" ]; then
-        die_with_status 128 "fatal: failed to remove work tree: '$work_tree'"
+        die_with_status 128 "git-bd: failed to remove work tree: '$work_tree'"
     fi
     git branch $B_OPT "$name"
     git config --remove-section bd.$name
@@ -163,11 +163,11 @@ function __bd_move {
             __bd_prompt_delete "$new_work_tree"
             if [ -d "$new_work_tree" ]; then
                 git branch -m "$new_name" "$name"
-                die_with_status 128 "fatal: failed to remove existing directory: '$new_work_tree'"
+                die_with_status 128 "git-bd: failed to remove existing directory: '$new_work_tree'"
             fi
         else
             git branch -m "$new_name" "$name"
-            die_with_status 128 "fatal: A directory named '$new_work_tree' already exists."
+            die_with_status 128 "git-bd: directory named '$new_work_tree' already exists."
         fi
     fi
     mv "$work_tree" "$new_work_tree"
