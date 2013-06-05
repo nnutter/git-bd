@@ -51,7 +51,7 @@ function __bd_git_dir {
 function __bd_init {
     local git_dir="$(__bd_git_dir)"
     local msg="Enter the master clone:"
-    if [ -n "$git_dir" ]; then
+    if [ -n "$git_dir" ] && [ -d "$git_dir" ]; then
         msg="$msg [$git_dir]"
     else
         # GIT_DIR is set by git-sh-setup
@@ -68,7 +68,7 @@ function __bd_init {
 
     local base_dir="$(__bd_base_dir)"
     msg="Enter the base directory for branchdirs:"
-    if [ -n "$base_dir" ]; then
+    if [ -n "$base_dir" ] && [ -d "$base_dir" ]; then
         msg="$msg [$base_dir]"
     else
         base_dir="$( cd -P $GIT_DIR/../.. && pwd)"
