@@ -4,20 +4,16 @@
 
 # Installation
 
-Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
-Source `bd.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
-To setup a repo to use `git bd` with do:
+1. Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
+2. Source `bd.bashrc` in your `~/.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
+3. To setup a repo to use `git bd --init`.
 
-    git config branchdir.base <dir>
-    git config branchdir.git-dir <.gitdir>
+    For example:
 
-For example:
-
-    cd <REPO>
-    mkdir bd
-    git config branchdir.base "$PWD"/bd
-    git config branchdir.git-dir "$(git rev-parse --git-dir)"
-    echo bd >> .gitignore
+        mkdir git-bd
+        git clone https://github.com/nnutter/git-bd.git master
+        cd master
+        git bd --init
 
 # Caveats
 
