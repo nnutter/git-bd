@@ -197,6 +197,9 @@ function __bd_new {
         local git_dir="$(__bd_git_dir)"
         local base_dir="$(__bd_base_dir)"
         work_tree="$base_dir/$name"
+        if [ -d "$work_tree" ]; then
+            die_with_status 128 "git-bd: workdir already exists: '$work_tree'"
+        fi
         if [ -n "$start_point" ]; then
             git branch $name $start_point
         else
