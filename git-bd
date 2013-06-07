@@ -83,6 +83,16 @@ function __bd_init {
 
     git config --replace-all bd.git-dir "$git_dir"
     git config --replace-all bd.base-dir "$base_dir"
+
+    local response=$(__bd_prompt  "Would you like to convert existing branches to brandirs now?" "(y|n)")
+    if [ "$response" == "y" ]; then
+        for branch in $(git rev-parse --symbolic --branches); do
+            response=$(__bd_prompt  "Would you like to convert '$branch' to a brandir?" "(y|n)")
+            if [ "$response" == "y" ]; then
+                __bd_new "$branch"
+            fi
+        done
+    fi
 }
 
 
