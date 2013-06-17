@@ -195,8 +195,10 @@ function __bd_move {
         fi
     fi
     mv "$work_tree" "$new_work_tree"
+    cd "$new_work_tree"
+    git checkout $new_name > /dev/null
     git config --remove-section bd.$name
-    git config --add bd.$new_name.work-tree $new_work_tree
+    git config --add bd.${new_name}.work-tree $new_work_tree
 }
 
 
