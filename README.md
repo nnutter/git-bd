@@ -27,7 +27,7 @@ Remember, almost everything that happens in Git can be undone. Don't panic!
 
 # Install from npm
 
-`npm install -g git-bd`
+__npm install -g git-bd__
 
 Run these commands if you installed globally with -g
 ```bash
