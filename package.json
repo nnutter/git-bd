@@ -1,0 +1,12 @@
+{
+  "name" : "git-bd",
+  "version" : "1.0.0",
+  "description" : "A new working directory for each git branch.",
+  "keywords" : ["git", "development", "environment", "branch"],
+  "repository" : "https://github.com/nnutter/git-bd",
+  "license" : "MIT",
+  "author" : "Nathan Nutter",
+  "bin" : "./git-bd",
+  "dependencies" : { "git-new-workdir" : ">=1.0.0" },
+  "preferGlobal" : true
+}
