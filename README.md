@@ -15,6 +15,7 @@
         cd master
         git bd --init
 
+
 # Caveats
 
 Remember, almost everything that happens in Git can be undone. Don't panic!
@@ -22,6 +23,24 @@ Remember, almost everything that happens in Git can be undone. Don't panic!
 - If you mix `git merge` or `git pull` with `git pull --rebase` you will probably regret it.
 - If you mix `git branch` and `git bd` you will probably regret it.
 - If you move your branchdir base repo you will have to repair broken symlinks. Some of which are "supposed" to be broken.
+
+
+# Install from npm
+
+__npm install -g git-bd__
+
+Run these commands if you installed globally with -g
+```bash
+echo PATH=\$PATH:`npm -g list --parseable git-new-workdir | head -n1` >> ~/.bashrc
+echo . `npm -g list --parseable git-bd | head -n1`/bd.bashrc >> ~/.bashrc
+```
+
+Run these commands if you installed locally without -g
+```bash
+echo PATH=\$PATH:`npm list --parseable git-bd | head -n1` >> ~/.bashrc
+echo PATH=\$PATH:`npm list --parseable git-new-workdir | head -n1` >> ~/.bashrc
+echo . `npm list --parseable git-bd | head -n1`/bd.bashrc >> ~/.bashrc
+```
 
 # Convert from `git-branchdir-manager`
 
