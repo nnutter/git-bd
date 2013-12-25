@@ -24,6 +24,16 @@ Remember, almost everything that happens in Git can be undone. Don't panic!
 - If you mix `git branch` and `git bd` you will probably regret it.
 - If you move your branchdir base repo you will have to repair broken symlinks. Some of which are "supposed" to be broken.
 
+# Install with [Homebrew][] (Mac OS X only)
+
+If you have [Homebrew][] installed you can easily install `git-bd`:
+
+    brew tap nnutter/homebrew-misc
+    brew install git-bd
+
+Pay attention to the caveat about modifying your `~/.bash_profile`.
+
+[Homebrew]: http://brew.sh
 
 # Install from npm
 
