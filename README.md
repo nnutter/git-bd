@@ -4,27 +4,7 @@
 
 # Installation
 
-1. Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
-2. Source `bd.bashrc` in your `~/.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
-3. To setup a repo to use `git bd --init`.
-
-    For example:
-
-        mkdir git-bd
-        git clone https://github.com/nnutter/git-bd.git master
-        cd master
-        git bd --init
-
-
-# Caveats
-
-Remember, almost everything that happens in Git can be undone. Don't panic!
-
-- If you mix `git merge` or `git pull` with `git pull --rebase` you will probably regret it.
-- If you mix `git branch` and `git bd` you will probably regret it.
-- If you move your branchdir base repo you will have to repair broken symlinks. Some of which are "supposed" to be broken.
-
-# Install with [Homebrew][] (Mac OS X only)
+## Install with [Homebrew][] (Mac OS X only)
 
 If you have [Homebrew][] installed you can easily install `git-bd`:
 
@@ -35,7 +15,20 @@ Pay attention to the caveat about modifying your `~/.bash_profile`.
 
 [Homebrew]: http://brew.sh
 
-# Install from npm
+## Install from source
+
+1. Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
+2. Source `bd.bashrc` in your `~/.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
+3. To setup a repo to use `git bd --init`.
+
+For example:
+
+    mkdir git-bd
+    git clone https://github.com/nnutter/git-bd.git master
+    cd master
+    git bd --init
+
+## Install from npm
 
 __npm install -g git-bd__
 
@@ -51,6 +44,14 @@ echo PATH=\$PATH:`npm list --parseable git-bd | head -n1` >> ~/.bashrc
 echo PATH=\$PATH:`npm list --parseable git-new-workdir | head -n1` >> ~/.bashrc
 echo . `npm list --parseable git-bd | head -n1`/bd.bashrc >> ~/.bashrc
 ```
+
+# Caveats
+
+Remember, almost everything that happens in Git can be undone. Don't panic!
+
+- If you mix `git merge` or `git pull` with `git pull --rebase` you will probably regret it.
+- If you mix `git branch` and `git bd` you will probably regret it.
+- If you move your branchdir base repo you will have to repair broken symlinks. Some of which are "supposed" to be broken.
 
 # Convert from `git-branchdir-manager`
 
