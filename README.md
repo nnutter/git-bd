@@ -19,7 +19,8 @@ Pay attention to the caveat about modifying your `~/.bash_profile`.
 
 1. Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
 2. Source `bd.bashrc` in your `~/.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
-3. To setup a repo to use `git bd --init`.  
+3. To setup a repo to use `git bd --init`.
+
     For example:
 
         mkdir git-bd
