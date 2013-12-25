@@ -8,9 +8,9 @@ sysconfdir ?= $(prefix)/etc
 
 profiledir = $(sysconfdir)/profile.d
 
-all: install caveat
+all: install caveats
 
-caveat:
+caveats:
 	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
 	@echo
 	@echo '  for script in $(profiledir)/*.sh; do'
@@ -28,4 +28,4 @@ install:
 	@install -d $(profiledir)
 	@install bd.bashrc $(profiledir)/git-bd.sh
 
-.PHONY: all caveat install
+.PHONY: all caveats install
