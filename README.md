@@ -15,7 +15,15 @@ Pay attention to the caveat about modifying your `~/.bash_profile`.
 
 [Homebrew]: http://brew.sh
 
-## Install from source
+## Install using Makefile
+
+You can install from source using `make`:
+
+    PREFIX=/usr/local
+    mkdir -p $PREFIX
+    make prefix=$PREFIX
+
+## Install manually
 
 1. Put `git-bd` and `git-new-workdir` in your `PATH` and ensure it is executable.
 2. Source `bd.bashrc` in your `~/.bashrc` to add Bash completion for `git bd` and to add a Bash function, `bd`, to switch between branchdirs.
