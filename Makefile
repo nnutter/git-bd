@@ -1,25 +1,14 @@
 #!/usr/bin/make -f
 
-prefix ?= /usr/local
+prefix ?= $(DESTDIR)/usr
 exec_prefix ?= $(prefix)
 
 bindir ?= $(exec_prefix)/bin
-sysconfdir ?= $(prefix)/etc
+sysconfdir ?= $(DESTDIR)/etc
 
 profiledir = $(sysconfdir)/profile.d
 
-all: install caveats
-
-caveats:
-	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
-	@echo
-	@echo '  for script in $(profiledir)/*.sh; do'
-	@echo '    if [ -r $$script ]; then'
-	@echo '      source $$script'
-	@echo '    fi'
-	@echo '  done'
-	@echo
-	@echo "This will enable the use of the 'bd' command which makes it easy to switch between a repo's branchdirs. 'git-bd' is available regardless of whether you choose to do this."
+all: install
 
 install:
 	@install -d $(bindir)
