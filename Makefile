@@ -8,7 +8,11 @@ sysconfdir ?= $(DESTDIR)/etc
 
 profiledir = $(sysconfdir)/profile.d
 
-all: install
+build:
+	true
+
+clean:
+	true
 
 install:
 	@install -d $(bindir)
