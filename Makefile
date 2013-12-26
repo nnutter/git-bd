@@ -23,18 +23,11 @@ PROFILE_SH=\
 'source $(bashrc)\n'\
 'fi'
 
-all: install caveats
+build:
+	true
 
-caveats:
-	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
-	@echo
-	@echo '  for script in $(profiledir)/*.sh; do'
-	@echo '    if [ -r $$script ]; then'
-	@echo '      source $$script'
-	@echo '    fi'
-	@echo '  done'
-	@echo
-	@echo "This will enable the use of the 'bd' command which makes it easy to switch between a repo's branchdirs. 'git-bd' is available regardless of whether you choose to do this."
+clean:
+	true
 
 install:
 	@install -d $(DESTDIR)$(bindir)
