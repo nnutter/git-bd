@@ -1,3 +1,9 @@
+git-bd (0.1.4-0ubuntu0tgi2) lucid; urgency=low
+
+  * Add missing build dependency on debhelper (>= 7).
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Thu, 26 Dec 2013 16:37:36 -0600
+
 git-bd (0.1.4-0ubuntu0tgi1) stable; urgency=low
 
   * Initial release of git-bd v0.1.4.
