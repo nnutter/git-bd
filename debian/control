@@ -1,6 +1,7 @@
 Source: git-bd
 Section: vcs
 Priority: optional
+Build-Depends: debhelper (>= 7)
 Maintainer: Nathaniel Nutter <nnutter@genome.wustl.edu>
 Homepage: https://github.com/nnutter/git-bd
 Bugs: https://github.com/nnutter/git-bd/issues
