@@ -1,0 +1,5 @@
+git-bd (0.1.4-0ubuntu0tgi1) stable; urgency=low
+
+  * Initial release of git-bd v0.1.4.
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Thu, 26 Dec 2013 13:51:41 -0600

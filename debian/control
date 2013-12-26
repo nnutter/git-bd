@@ -1,0 +1,12 @@
+Source: git-bd
+Section: vcs
+Priority: optional
+
+Maintainer: Nathaniel Nutter <nnutter@genome.wustl.edu>
+Homepage: https://github.com/nnutter/git-bd
+Bugs: https://github.com/nnutter/git-bd/issues
+
+Package: git-bd
+Architecture: any
+Depends: git | git-core
+Description: Create a new working directory for a Git branch
