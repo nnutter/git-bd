@@ -15,6 +15,12 @@ Pay attention to the caveat about modifying your `~/.bash_profile`.
 
 [Homebrew]: http://brew.sh
 
+## Install with PPA (Ubuntu only)
+
+    sudo add-apt-repository ppa:nnutter/git-bd
+    sudo apt-get update
+    sudo apt-get install git-bd
+
 ## Install using Makefile
 
 You can install from source using `make`:
