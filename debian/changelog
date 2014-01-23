@@ -1,3 +1,9 @@
+git-bd (0.1.5-1) lucid; urgency=low
+
+  * Fix for users with Dash as shell.
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Thu, 23 Jan 2014 17:56:15 -0600
+
 git-bd (0.1.4-0ubuntu0tgi2) lucid; urgency=low
 
   * Add missing build dependency on debhelper (>= 7).
