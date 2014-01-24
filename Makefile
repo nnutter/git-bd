@@ -1,12 +1,27 @@
 #!/usr/bin/make -f
 
-prefix ?= $(DESTDIR)/usr
+ifdef DESTDIR
+prefix ?= /usr
+sysconfdir ?= /etc
+else
+prefix ?= /usr/local
+sysconfdir ?= $(prefix)/etc
+endif
+
 exec_prefix ?= $(prefix)
 
 bindir ?= $(exec_prefix)/bin
-sysconfdir ?= $(DESTDIR)/etc
+datadir ?= $(prefix)/share
+bashrc ?= $(datadir)/git-bd.bashrc
 
 profiledir = $(sysconfdir)/profile.d
+profile = $(profiledir)/git-bd.sh
+
+PROFILE_SH=\
+'if [ -n "$${BASH_VERSION}" -o]\n'\
+'then\n'\
+'source $(bashrc)\n'\
+'fi'
 
 build:
 	true
@@ -15,10 +30,12 @@ clean:
 	true
 
 install:
-	@install -d $(bindir)
-	@install git-bd $(bindir)/git-bd
-	@install git-new-workdir $(bindir)/git-new-workdir
-	@install -d $(profiledir)
-	@install bd.bashrc $(profiledir)/git-bd.sh
+	@install -d $(DESTDIR)$(bindir)
+	@install git-bd $(DESTDIR)$(bindir)/git-bd
+	@install git-new-workdir $(DESTDIR)$(bindir)/git-new-workdir
+	@install -d $(DESTDIR)$(datadir)
+	@install git-bd.bashrc $(DESTDIR)$(bashrc)
+	@install -d $(DESTDIR)$(profiledir)
+	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
 
 .PHONY: all caveats install

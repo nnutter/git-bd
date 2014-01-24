@@ -1,28 +1,19 @@
-From 11d121080a5b7d0b852fc88f758320830b4d1bcd Mon Sep 17 00:00:00 2001
+From 4950727b8ef94967a801b7f010ae337b7fb78fc1 Mon Sep 17 00:00:00 2001
 From: Nathan Nutter <iam@nnutter.com>
-Date: Thu, 26 Dec 2013 15:09:23 -0600
-Subject: patch Makefile for DESTDIR
+Date: Thu, 26 Dec 2013 15:17:34 -0600
+Subject: make fake build and clean targets
 
 ---
- Makefile | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ Makefile | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index a35e994..e254a1f 100644
+index 36a6287..bd7034d 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1,25 +1,14 @@
- #!/usr/bin/make -f
- 
--prefix ?= /usr/local
-+prefix ?= $(DESTDIR)/usr
- exec_prefix ?= $(prefix)
- 
- bindir ?= $(exec_prefix)/bin
--sysconfdir ?= $(prefix)/etc
-+sysconfdir ?= $(DESTDIR)/etc
- 
- profiledir = $(sysconfdir)/profile.d
+@@ -23,18 +23,11 @@ PROFILE_SH=\
+ 'source $(bashrc)\n'\
+ 'fi'
  
 -all: install caveats
 -
@@ -36,10 +27,14 @@ index a35e994..e254a1f 100644
 -	@echo '  done'
 -	@echo
 -	@echo "This will enable the use of the 'bd' command which makes it easy to switch between a repo's branchdirs. 'git-bd' is available regardless of whether you choose to do this."
-+all: install
++build:
++	true
++
++clean:
++	true
  
  install:
- 	@install -d $(bindir)
+ 	@install -d $(DESTDIR)$(bindir)
 -- 
 1.8.4
 
