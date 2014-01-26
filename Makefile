@@ -18,7 +18,7 @@ profiledir = $(sysconfdir)/profile.d
 profile = $(profiledir)/git-bd.sh
 
 PROFILE_SH=\
-'if [ -n "$${BASH_VERSION}" -o]\n'\
+'if [ -n "$${BASH_VERSION}" ]\n'\
 'then\n'\
 'source $(bashrc)\n'\
 'fi'
@@ -38,4 +38,6 @@ install:
 	@install -d $(DESTDIR)$(profiledir)
 	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
 
-.PHONY: all caveats install
+all: install caveats
+
+.PHONY: all caveats install build clean

@@ -1,22 +1,20 @@
-From 4950727b8ef94967a801b7f010ae337b7fb78fc1 Mon Sep 17 00:00:00 2001
+From f8319b54755c6efbcb84703b7dd8eb7d6bc8465d Mon Sep 17 00:00:00 2001
 From: Nathan Nutter <iam@nnutter.com>
 Date: Thu, 26 Dec 2013 15:17:34 -0600
 Subject: make fake build and clean targets
 
 ---
- Makefile | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ Makefile | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 36a6287..bd7034d 100644
+index 4a83b54..a2fc942 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -23,18 +23,11 @@ PROFILE_SH=\
- 'source $(bashrc)\n'\
- 'fi'
+@@ -29,17 +29,6 @@ build:
+ clean:
+ 	true
  
--all: install caveats
--
 -caveats:
 -	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
 -	@echo
@@ -27,14 +25,10 @@ index 36a6287..bd7034d 100644
 -	@echo '  done'
 -	@echo
 -	@echo "This will enable the use of the 'bd' command which makes it easy to switch between a repo's branchdirs. 'git-bd' is available regardless of whether you choose to do this."
-+build:
-+	true
-+
-+clean:
-+	true
- 
+-
  install:
  	@install -d $(DESTDIR)$(bindir)
+ 	@install git-bd $(DESTDIR)$(bindir)/git-bd
 -- 
 1.8.4
 

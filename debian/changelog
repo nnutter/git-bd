@@ -1,3 +1,9 @@
+git-bd (0.1.6-1) lucid; urgency=low
+
+  * Fix for typo in profile wrapper introduced in v0.1.5.
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Sun, 26 Jan 2014 00:01:27 -0600
+
 git-bd (0.1.5-1) lucid; urgency=low
 
   * Fix for users with Dash as shell.
