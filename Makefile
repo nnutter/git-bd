@@ -23,7 +23,11 @@ PROFILE_SH=\
 'source $(bashrc)\n'\
 'fi'
 
-all: install caveats
+build:
+	true
+
+clean:
+	true
 
 caveats:
 	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
@@ -45,4 +49,6 @@ install:
 	@install -d $(DESTDIR)$(profiledir)
 	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
 
-.PHONY: all caveats install
+all: install caveats
+
+.PHONY: all caveats install build clean
