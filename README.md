@@ -1,6 +1,6 @@
-# Description
+# git-bd
 
-`git bd` mimics `git branch` in usage but `git bd` creates a new working directory for each branch you create.  The combination of a branch and working directory is what I refer to as a *branchdir*.  *Branchdirs* allow you to have multiple branches checked out at once.
+`git bd` mimics `git branch` in usage but `git bd` creates a separate working directory for each branch.  The combination of a branch and working directory is what I refer to as a *branchdir*.  *Branchdirs* allow you to have multiple branches checked out at once.
 
 # Installation
 
