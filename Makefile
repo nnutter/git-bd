@@ -17,6 +17,8 @@ bashrc ?= $(datadir)/git-bd.bashrc
 profiledir = $(sysconfdir)/profile.d
 profile = $(profiledir)/git-bd.sh
 
+mandir = $(prefix)/share/man
+
 PROFILE_SH=\
 'if [ -n "$${BASH_VERSION}" ]\n'\
 'then\n'\
@@ -52,6 +54,7 @@ install:
 	@install git-bd.bashrc $(DESTDIR)$(bashrc)
 	@install -d $(DESTDIR)$(profiledir)
 	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
+	@install git-bd.1 $(DESTDIR)$(mandir)/man1/git-bd.1
 
 all: install caveats
 
