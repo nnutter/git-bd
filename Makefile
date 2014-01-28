@@ -23,11 +23,15 @@ PROFILE_SH=\
 'source $(bashrc)\n'\
 'fi'
 
-build:
-	true
+build: docs
 
 clean:
-	true
+	@rm -f git-bd.1
+
+git-bd.1:
+	@pandoc -s -t man git-bd.md -o git-bd.1
+
+docs: git-bd.1
 
 caveats:
 	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
@@ -51,4 +55,4 @@ install:
 
 all: install caveats
 
-.PHONY: all caveats install build clean
+.PHONY: all caveats install build clean docs
