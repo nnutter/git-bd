@@ -25,7 +25,7 @@ PROFILE_SH=\
 'source $(bashrc)\n'\
 'fi'
 
-build: docs
+build:
 
 clean:
 	@rm -f git-bd.1
@@ -54,8 +54,10 @@ install:
 	@install git-bd.bashrc $(DESTDIR)$(bashrc)
 	@install -d $(DESTDIR)$(profiledir)
 	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
+
+install-docs: docs
 	@install git-bd.1 $(DESTDIR)$(mandir)/man1/git-bd.1
 
 all: install caveats
 
-.PHONY: all caveats install build clean docs
+.PHONY: all caveats install build clean docs install-docs
