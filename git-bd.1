@@ -1,0 +1,98 @@
+.TH "GIT\-BD" "1" "January 27, 2014" "git\-bd 0.1.8" "git\-bd User Manuals"
+.SH NAME
+.PP
+git\-bd \- working directories for your branches
+.SH SYNOPSIS
+.PP
+git bd <branchdir> [<start\-point>]
+.PD 0
+.P
+.PD
+git bd (\-m | \-M) <oldbranchdir> <newbranchdir>
+.PD 0
+.P
+.PD
+git bd (\-d | \-D) <branchdir>
+.SH DESCRIPTION
+.PP
+\f[C]git\ bd\f[] mimics \f[C]git\ branch\f[] in usage but
+\f[C]git\ bd\f[] creates a separate working directory for each branch.
+The combination of a branch and working directory is referred to as a
+\f[I]branchdir\f[].
+\f[I]Branchdirs\f[] allow you to have multiple branches checked out
+simultaneously.
+.SH OPTIONS
+.TP
+.B \-m
+Move/rename a branch.
+.RS
+.RE
+.TP
+.B \-M
+Move/rename a branch even if the new branch name already exists.
+.RS
+.RE
+.TP
+.B \-d
+Delete a branch.
+The branch must be fully merged in its upstream branch, or in HEAD if no
+upstream was set with \-\-track or \-\-set\-upstream.
+.RS
+.RE
+.TP
+.B \-D
+Delete a branch irrespective of its merged status.
+.RS
+.RE
+.TP
+.B \-\-init
+Initialize \[aq]git bd\[aq] configuration.
+.RS
+.RE
+.SH EXAMPLES
+.PP
+Initialize \[aq]git bd\[aq] configuration by running \[aq]git bd
+\-\-init\[aq].
+.PP
+Use \[aq]git bd\[aq] instead of \[aq]git branch\[aq] to create a
+separate working directory for your branch:
+.IP
+.nf
+\f[C]
+$\ git\ bd\ my2.6.14\ v2.6.14
+$\ bd\ my2.6.14
+\f[]
+.fi
+.SH SEE ALSO
+.PP
+\f[C]git\-branch\f[] (1).
+.SH BUGS
+.PP
+When deleting a branchdir the working directory is removed and then the
+branch.
+If the branch fails to be removed, e.g.
+because Git thinks it\[aq]s not merged, then you will need to remove the
+branch manually.
+.SH COPYRIGHT
+.PP
+Copyright (c) 2013, Nathaniel Nutter
+.PP
+This is free documentation; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+.PP
+The GNU General Public License\[aq]s references to "object code" and
+"executables" are to be interpreted as the output of any document
+formatting or typesetting system, including intermediate and printed
+output.
+.PP
+This manual is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+.PP
+You should have received a copy of the GNU General Public License along
+with this manual; if not, see <http://www.gnu.org/licenses/>.
+.SH AUTHORS
+Nathaniel Nutter <git\-bd\@nnutter.com>.

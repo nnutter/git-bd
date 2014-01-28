@@ -17,6 +17,8 @@ bashrc ?= $(datadir)/git-bd.bashrc
 profiledir = $(sysconfdir)/profile.d
 profile = $(profiledir)/git-bd.sh
 
+mandir = $(prefix)/share/man
+
 PROFILE_SH=\
 'if [ -n "$${BASH_VERSION}" ]\n'\
 'then\n'\
@@ -24,10 +26,13 @@ PROFILE_SH=\
 'fi'
 
 build:
-	true
 
 clean:
-	true
+
+git-bd.1: git-bd.md
+	@pandoc -s -t man git-bd.md -o git-bd.1
+
+docs: git-bd.1
 
 caveats:
 	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
@@ -49,6 +54,9 @@ install:
 	@install -d $(DESTDIR)$(profiledir)
 	@echo $(PROFILE_SH) | sed 's/^ *//' > $(DESTDIR)$(profile)
 
+install-docs: docs
+	@install git-bd.1 $(DESTDIR)$(mandir)/man1/git-bd.1
+
 all: install caveats
 
-.PHONY: all caveats install build clean
+.PHONY: all caveats install build clean docs install-docs
