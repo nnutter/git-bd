@@ -1,4 +1,4 @@
-% GIT-BD(1) git-bd 0.1.7 | git-bd User Manuals
+% GIT-BD(1) git-bd 0.1.8 | git-bd User Manuals
 % Nathaniel Nutter \<git-bd@nnutter.com\>
 % January 27, 2014
 
