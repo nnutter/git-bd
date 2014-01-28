@@ -28,7 +28,6 @@ PROFILE_SH=\
 build:
 
 clean:
-	@rm -f git-bd.1
 
 git-bd.1: git-bd.md
 	@pandoc -s -t man git-bd.md -o git-bd.1
