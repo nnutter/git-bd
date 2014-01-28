@@ -1,4 +1,4 @@
-From f8319b54755c6efbcb84703b7dd8eb7d6bc8465d Mon Sep 17 00:00:00 2001
+From 9ab998d121546a13d86ab2740bc368f864a5d4ea Mon Sep 17 00:00:00 2001
 From: Nathan Nutter <iam@nnutter.com>
 Date: Thu, 26 Dec 2013 15:17:34 -0600
 Subject: make fake build and clean targets
@@ -8,12 +8,12 @@ Subject: make fake build and clean targets
  1 file changed, 11 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 4a83b54..a2fc942 100644
+index b39f220..a8f33bf 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -29,17 +29,6 @@ build:
- clean:
- 	true
+@@ -34,17 +34,6 @@ git-bd.1: git-bd.md
+ 
+ docs: git-bd.1
  
 -caveats:
 -	@echo 'If $(profiledir)/*.sh are not already automatically sourced you should add the following to your ~/.bash_profile:'
