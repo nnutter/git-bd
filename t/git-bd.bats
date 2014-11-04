@@ -11,6 +11,8 @@ function setup {
 
     git init master
     cd master
+    git config user.email "you@example.com"
+    git config user.name "Your Name"
     touch README.md
     git add README.md
     git commit -m 'initial commit'
