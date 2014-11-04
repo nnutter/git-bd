@@ -4,7 +4,7 @@ See [git-bd.md](https://github.com/nnutter/git-bd/blob/master/git-bd.md).
 
 # Installation
 
-See [INSTALL.md](https://github.com/nnutter/git-bd/blob/master/INSTALL.md).
+See [INSTALL.md](https://github.com/nnutter/git-bd/blob/master/docs/INSTALL.md).
 
 # Caveats
 
