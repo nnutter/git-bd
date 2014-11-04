@@ -1,0 +1,6 @@
+before_install:
+    - git clone https://github.com/sstephenson/bats.git
+install:
+    - sudo bats/install.sh /usr/local
+script:
+    - t/git-bd.bats

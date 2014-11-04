@@ -17,7 +17,7 @@ function tempdir {
 
     if man mktemp | grep -q GNU
     then
-        warn "GNU mktemp"
+        TEMPDIR="$(mktemp --tmpdir -d git-bd.XXXXXXXX)"
     fi
 
     echo "$TEMPDIR"
