@@ -313,6 +313,7 @@ function __bd {
 
 SUBDIRECTORY_OK=1
 OPTIONS_SPEC="\
+git bd --init
 git bd <branchdir> [<start-point>]
 git bd [-f] (-m | -M) <oldbranchdir> <newbranchdir>
 git bd [-f] (-d | -D) <branchdir>
