@@ -155,28 +155,23 @@ function __bd_delete {
     work_tree="$(git config --get bd.$name.work-tree || true)"
     if [ -z "$work_tree" ]; then
         say "git-bd: branchdir not found: $name"
-        if git show-ref --verify --quiet refs/heads/$name; then
-            say ''
-            say 'Do you just need to delete the branch?'
-        fi
-        exit 128
-    fi
-    if [ ! -d "$work_tree" ]; then
-        say "git-bd: workdir not found: $work_tree"
-        if git show-ref --verify --quiet refs/heads/$name; then
-            say ''
-            say 'Do you just need to delete the branch?'
-        fi
         exit 128
     fi
     if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
         die_with_status 128 "git-bd: cannot delete the branchdir you are currently in"
     fi
-    __bd_prompt_delete "$work_tree"
     if [ -d "$work_tree" ]; then
-        die_with_status 128 "git-bd: failed to remove work tree: '$work_tree'"
+        __bd_prompt_delete "$work_tree"
+        if [ -d "$work_tree" ]; then
+            say "git-bd: failed to remove work tree: '$work_tree'"
+        fi
     fi
-    git branch $B_OPT "$name"
+    if git show-ref --verify --quiet refs/heads/$name; then
+        git branch $B_OPT "$name"
+        if git show-ref --verify --quiet refs/heads/$name; then
+            say "git-bd: failed to remove branch: '$name'"
+        fi
+    fi
     git config --remove-section bd.$name
 }
 
