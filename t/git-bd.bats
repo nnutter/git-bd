@@ -143,3 +143,32 @@ function teardown {
     test -d "$TEMPDIR/bar"
     git rev-parse --verify refs/heads/bar
 }
+
+@test "delete fails for unknown branchdir" {
+    run git-bd -df foo
+    test "$status" -ne 0
+}
+
+@test "delete with branch and work_tree already removed" {
+    git-bd foo
+    git branch -d foo
+    rm -rf "$TEMPDIR/foo"
+    run git-bd -df foo
+    test "$status" -eq 0
+}
+
+@test "delete with branch already removed" {
+    git-bd foo
+    git branch -d foo
+    run git-bd -df foo
+    test "$status" -eq 0
+    ! test -d "$TEMPDIR/foo"
+}
+
+@test "delete with work_tree already removed" {
+    git-bd foo
+    rm -rf "$TEMPDIR/foo"
+    run git-bd -df foo
+    test "$status" -eq 0
+    ! git rev-parse --verify refs/heads/foo
+}
