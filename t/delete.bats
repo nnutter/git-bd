@@ -110,19 +110,3 @@ function teardown {
     ! branch_exists foo
     ! work_tree_exists foo
 }
-
-@test "repeated deletes" {
-    git-bd foo
-    cd "$TEMPDIR/foo"
-    echo foo > README.md
-    git commit -m 'foo' README.md
-    cd "$TEMPDIR/master"
-    run git-bd -df foo
-    test "$status" -ne 0
-    ! work_tree_exists foo
-    branch_exists foo
-    git branch -f foo master
-    run git-bd -df foo
-    test "$status" -eq 0
-    ! branch_exists foo
-}
