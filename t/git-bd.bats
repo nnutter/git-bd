@@ -32,7 +32,6 @@ function teardown {
 
 @test "CWD setup correctly" {
     run pwd
-    warn "$output"
     test "$status" -eq 0
     test "$output"  = "$TEMPDIR/master"
 }

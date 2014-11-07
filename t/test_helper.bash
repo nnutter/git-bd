@@ -2,10 +2,6 @@ function abs_path {
     echo "$( cd -P "$1" && pwd )"
 }
 
-function warn {
-    echo "$@" 1>&2
-}
-
 function tempdir {
     set -o errexit
     local TEMPDIR
