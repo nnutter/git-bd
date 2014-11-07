@@ -12,32 +12,33 @@ function teardown {
 
 @test "rename succeeds with valid new name" {
     git-bd foo
+
     run git-bd -m foo bar
     test "$status" -eq 0
-    ! test -d "$TEMPDIR/foo"
-    ! git rev-parse --verify refs/heads/foo
-    test -d "$TEMPDIR/bar"
-    git rev-parse --verify refs/heads/bar
+    ! bd_registered foo
+    ! branch_exists foo
+    ! work_tree_exists foo
+    bd_exists bar
 }
 
 @test "rename fails when new name already exists" {
     git-bd foo
     git-bd bar
+
     run git-bd -mf foo bar
     test "$status" -ne 0
-    test -d "$TEMPDIR/foo"
-    git rev-parse --verify refs/heads/foo
-    test -d "$TEMPDIR/bar"
-    git rev-parse --verify refs/heads/bar
+    bd_exists foo
+    bd_exists bar
 }
 
 @test "force rename succeeds when new name already exists" {
     git-bd foo
     git-bd bar
+
     run git-bd -Mf foo bar
     test "$status" -eq 0
-    ! test -d "$TEMPDIR/foo"
-    ! git rev-parse --verify refs/heads/foo
-    test -d "$TEMPDIR/bar"
-    git rev-parse --verify refs/heads/bar
+    ! bd_registered foo
+    ! branch_exists foo
+    ! work_tree_exists foo
+    bd_exists bar
 }

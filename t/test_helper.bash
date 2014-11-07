@@ -63,3 +63,7 @@ function init_repo {
 
     git-bd -f --init
 }
+
+function sha_of {
+    git rev-parse --verify refs/heads/${1}
+}

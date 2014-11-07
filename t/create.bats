@@ -11,11 +11,10 @@ function teardown {
 }
 
 @test "create succeeds without start point" {
-    git-bd foo
-    test -d "$TEMPDIR/foo"
-    FOO="$(git rev-parse --verify refs/heads/foo)"
-    MASTER="$(git rev-parse --verify refs/heads/master)"
-    test "$FOO" = "$MASTER"
+    run git-bd foo
+    test "$status" -eq 0
+    bd_exists foo
+    test "$(sha_of foo)" = "$(sha_of master)"
 }
 
 @test "create succeeds with start point" {
@@ -23,18 +22,18 @@ function teardown {
     echo foo > README.md
     git commit -m 'foo' README.md
     git checkout master
-    git-bd baz foo
-    test -d "$TEMPDIR/baz"
-    BAZ="$(git rev-parse --verify refs/heads/baz)"
-    FOO="$(git rev-parse --verify refs/heads/foo)"
-    MASTER="$(git rev-parse --verify refs/heads/master)"
-    test "$BAZ" = "$FOO"
-    test "$BAZ" != "$MASTER"
+
+    run git-bd baz foo
+    test "$status" -eq 0
+    bd_exists baz
+    test "$(sha_of baz)"  = "$(sha_of foo)"
+    test "$(sha_of baz)" != "$(sha_of master)"
 }
 
 @test "create fails when start point doesn't exist" {
     run git-bd baz foo
     test "$status" -ne 0
-    ! test -d "$TEMPDIR/baz"
-    ! git rev-parse --verify refs/heads/baz
+    ! bd_registered baz
+    ! branch_exists baz
+    ! work_tree_exists baz
 }
