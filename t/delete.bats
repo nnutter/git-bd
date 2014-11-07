@@ -110,3 +110,18 @@ function teardown {
     ! branch_exists foo
     ! work_tree_exists foo
 }
+
+@test "delete does not touch work_tree or branch if unregistered" {
+    git-bd foo
+
+    git config --unset bd.foo.work-tree
+
+    ! bd_registered foo
+    branch_exists foo
+    work_tree_exists foo
+    run git-bd -df foo
+    test "$status" -ne 0
+    ! bd_registered foo
+    branch_exists foo
+    work_tree_exists foo
+}
