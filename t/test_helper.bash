@@ -39,11 +39,11 @@ function bd_registered {
 }
 
 function work_tree_exists {
-    test -d "$(git config bd.${1}.work-tree)"
+    test -d "${TEMPDIR}/${1}"
 }
 
 function bd_exists {
-    branch_exists ${1} && work_tree_exists ${1}
+    branch_exists ${1} && work_tree_exists ${1} && bd_registered ${1}
 }
 
 function init_repo {
