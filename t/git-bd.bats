@@ -21,7 +21,7 @@ function setup {
 }
 
 function teardown {
-    tempdir_trap $TEMPDIR
+    tempdir_cleanup $TEMPDIR
 }
 
 @test "PATH setup correctly" {

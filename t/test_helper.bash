@@ -23,7 +23,7 @@ function tempdir {
     echo "$TEMPDIR"
 }
 
-function tempdir_trap {
+function tempdir_cleanup {
     local TEMPDIR="$1"
     if test -d "$TEMPDIR"
     then
