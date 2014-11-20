@@ -9,8 +9,8 @@ git-bd - working directories for your branches
 # SYNOPSIS
 
 git bd \<branchdir\> [\<start-point\>]  
-git bd (-m | -M) \<oldbranchdir\> \<newbranchdir\>  
-git bd (-d | -D) \<branchdir\>  
+git bd [-f] (-m | -M) \<oldbranchdir\> \<newbranchdir\>  
+git bd [-f] (-d | -D) \<branchdir\>  
 
 # DESCRIPTION
 
@@ -36,6 +36,9 @@ branches checked out simultaneously.
 
 \--init
 :   Initialize 'git bd' configuration.
+
+-f
+:   Suppress confirmation prompts and/or accept defaults.
 
 # EXAMPLES
 

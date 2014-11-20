@@ -30,7 +30,13 @@ function __bd_prompt {
 function __bd_prompt_delete {
     local dir="$1"
 
-    local response=$(__bd_prompt  "Are you sure you want to delete '$dir'?" "(y|n)")
+    local response
+    if test -z "$OPT_f"
+    then
+        response=$(__bd_prompt  "Are you sure you want to delete '$dir'?" "(y|n)")
+    else
+        response="y"
+    fi
     if [ "$response" == "y" ]; then
         rm -rf "$dir" || true
     else
@@ -61,7 +67,11 @@ function __bd_init {
         fi
     fi
 
-    local p_git_dir="$(__bd_prompt "$msg")"
+    local p_git_dir
+    if test -z "$OPT_f"
+    then
+        p_git_dir="$(__bd_prompt "$msg")"
+    fi
     if [ -n "$p_git_dir" ]; then
         git_dir="$p_git_dir"
     fi
@@ -74,7 +84,11 @@ function __bd_init {
         base_dir="$( cd -P $GIT_DIR/../.. && pwd)"
         msg="$msg [$base_dir]"
     fi
-    local p_base_dir="$(__bd_prompt "$msg")"
+    local p_base_dir
+    if test -z "$OPT_f"
+    then
+        p_base_dir="$(__bd_prompt "$msg")"
+    fi
     if [ -n "$p_base_dir" ]; then
         base_dir="$p_base_dir"
     fi
@@ -84,7 +98,13 @@ function __bd_init {
     git config --replace-all bd.git-dir "$git_dir"
     git config --replace-all bd.base-dir "$base_dir"
 
-    local response=$(__bd_prompt  "Would you like to convert existing branches to brandirs now?" "(y|n)")
+    local response
+    if test -z "$OPT_f"
+    then
+        response=$(__bd_prompt  "Would you like to convert existing branches to brandirs now?" "(y|n)")
+    else
+        response="n"
+    fi
     if [ "$response" == "y" ]; then
         for branch in $(git rev-parse --symbolic --branches); do
             response=$(__bd_prompt  "Would you like to convert '$branch' to a brandir?" "(y|n)")
@@ -135,28 +155,23 @@ function __bd_delete {
     work_tree="$(git config --get bd.$name.work-tree || true)"
     if [ -z "$work_tree" ]; then
         say "git-bd: branchdir not found: $name"
-        if git show-ref --verify --quiet refs/heads/$name; then
-            say ''
-            say 'Do you just need to delete the branch?'
-        fi
-        exit 128
-    fi
-    if [ ! -d "$work_tree" ]; then
-        say "git-bd: workdir not found: $work_tree"
-        if git show-ref --verify --quiet refs/heads/$name; then
-            say ''
-            say 'Do you just need to delete the branch?'
-        fi
         exit 128
     fi
     if [ "$(git rev-parse --show-toplevel)" == "$work_tree" ]; then
         die_with_status 128 "git-bd: cannot delete the branchdir you are currently in"
     fi
-    __bd_prompt_delete "$work_tree"
     if [ -d "$work_tree" ]; then
-        die_with_status 128 "git-bd: failed to remove work tree: '$work_tree'"
+        __bd_prompt_delete "$work_tree"
+        if [ -d "$work_tree" ]; then
+            say "git-bd: failed to remove work tree: '$work_tree'"
+        fi
     fi
-    git branch $B_OPT "$name"
+    if git show-ref --verify --quiet refs/heads/$name; then
+        git branch $B_OPT "$name"
+        if git show-ref --verify --quiet refs/heads/$name; then
+            say "git-bd: failed to remove branch: '$name'"
+        fi
+    fi
     git config --remove-section bd.$name
 }
 
@@ -252,6 +267,7 @@ function __bd {
             -M) OPT_M=1 ;;
             -d) OPT_d=1 ;;
             -D) OPT_D=1 ;;
+            -f) OPT_f=1 ;;
             --init) OPT_init=1 ;;
         esac
     done
@@ -292,9 +308,10 @@ function __bd {
 
 SUBDIRECTORY_OK=1
 OPTIONS_SPEC="\
+git bd --init
 git bd <branchdir> [<start-point>]
-git bd (-m | -M) <oldbranchdir> <newbranchdir>
-git bd (-d | -D) <branchdir>
+git bd [-f] (-m | -M) <oldbranchdir> <newbranchdir>
+git bd [-f] (-d | -D) <branchdir>
 --
 h,help  show the help
 init    Initialize 'git-bd'.
@@ -302,6 +319,7 @@ m       Move/rename a branchdir.
 M       Move/rename a branchdir even if the new branchdir already exists.
 d       Delete a branchdir.
 D       Delete a branchdir irrespective of its merged status.
+f       Suppress confirmation prompts.
 "
 
 
