@@ -1,10 +1,10 @@
-From 9ab998d121546a13d86ab2740bc368f864a5d4ea Mon Sep 17 00:00:00 2001
+From 2a75fa78453bf4120feb13f22fecd012cfc139b2 Mon Sep 17 00:00:00 2001
 From: Nathan Nutter <iam@nnutter.com>
 Date: Thu, 26 Dec 2013 15:17:34 -0600
 Subject: make fake build and clean targets
 
 ---
- Makefile | 11 -----------
+ Makefile |   11 -----------
  1 file changed, 11 deletions(-)
 
 diff --git a/Makefile b/Makefile
@@ -29,6 +29,3 @@ index b39f220..a8f33bf 100644
  install:
  	@install -d $(DESTDIR)$(bindir)
  	@install git-bd $(DESTDIR)$(bindir)/git-bd
--- 
-1.8.4
-
