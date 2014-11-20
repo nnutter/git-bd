@@ -1,3 +1,9 @@
+git-bd (0.2.0-1) precise; urgency=low
+
+  * New upstream version, 0.2.0.
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Wed, 19 Nov 2014 23:27:07 -0600
+
 git-bd (0.1.9-1) lucid; urgency=low
 
   * Manual page is now provided.
