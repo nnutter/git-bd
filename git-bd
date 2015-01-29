@@ -253,6 +253,29 @@ function __bd_list {
 }
 
 
+function __git_bd_is_merged {
+    git branch --contains $1 HEAD | grep -q '.'
+}
+
+
+function __git_bd_is_clean {
+    local base_dir="$(__bd_base_dir)"
+    local work_tree="$base_dir/$1"        
+    ( cd "$work_tree" && git status -s | grep -q '.' )
+}
+
+
+function __git_bd_cleanup {
+    for BD in $(__bd_list)
+    do
+        if __git_bd_is_merged $BD && __git_bd_is_clean $BD
+        then
+            git bd -d $BD
+        fi
+    done
+}
+
+
 function __bd {
     # OPTIONS_SPEC is parsed by git-sh-setup
     # GIT_DIR is set by git-sh-setup
@@ -269,14 +292,20 @@ function __bd {
             -D) OPT_D=1 ;;
             -f) OPT_f=1 ;;
             --init) OPT_init=1 ;;
+            --cleanup) OPT_cleanup=1 ;;
         esac
     done
 
     if [ -n "$OPT_init" ]; then
         __bd_init
         exit 0
-    else
-        __bd_validate_init
+    fi
+
+    __bd_validate_init
+
+    if [ -n "$OPT_cleanup" ]; then
+        __git_bd_cleanup
+        exit 0
     fi
 
     # validate name?
@@ -315,6 +344,7 @@ git bd [-f] (-d | -D) <branchdir>
 --
 h,help  show the help
 init    Initialize 'git-bd'.
+cleanup Deletes all clean, merged branchdirs.
 m       Move/rename a branchdir.
 M       Move/rename a branchdir even if the new branchdir already exists.
 d       Delete a branchdir.
